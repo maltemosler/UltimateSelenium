@@ -21,6 +21,6 @@ class UltimateSelenium:
                     return self.driver.find_element_by_xpath(path)
                 # except ProxyError:
                 #     return
-                except:
+                except Exception as e:
                     # todo: notify
                     time.sleep(randint(2, 3))
