@@ -14,8 +14,13 @@ class UltimateSelenium:
         except:
             return
 
-    def p(self):
-
-        time.sleep(randint(1, 3))
-        element = self.driver.find_element_by_xpath('//*[@id="username"]')
-        return element
+    def find_element(self, paths: list):
+        for i in range(3):
+            for path in paths:
+                try:
+                    return self.driver.find_element_by_xpath(path)
+                # except ProxyError:
+                #     return
+                except:
+                    # todo: notify
+                    time.sleep(randint(2, 3))
