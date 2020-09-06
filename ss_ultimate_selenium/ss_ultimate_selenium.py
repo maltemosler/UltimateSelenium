@@ -12,7 +12,7 @@ class UltimateSelenium:
         try:
             self.driver.get(url)
         except:
-            return
+            return False
 
     def find_element(self, paths: list):
         for i in range(3):
