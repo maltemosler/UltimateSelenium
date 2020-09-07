@@ -2,6 +2,10 @@ import time
 from random import randint
 
 
+class UltimateSeleniumError(Exception):
+    pass
+
+
 class UltimateSelenium:
     driver = None
 
@@ -14,13 +18,17 @@ class UltimateSelenium:
         except:
             return False
 
-    def find_element(self, paths: list):
+    def find_element(self, paths: list, require=True):
         for i in range(3):
             for path in paths:
                 try:
                     return self.driver.find_element_by_xpath(path)
                 # except ProxyError:
-                #     return
+                #     raise UltimateSeleniumError("US-restart")
                 except Exception as e:
-                    # todo: notify
+                    if i == 2:
+                        print(e)  # todo: notify
+                        # d = self.driver.get_screenshot_as_base64
                     time.sleep(randint(2, 3))
+        if require:
+            raise UltimateSeleniumError("US-restart")
