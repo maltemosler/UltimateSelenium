@@ -1,8 +1,7 @@
-import base64
 import time
-from io import BytesIO
 from random import randint
 
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from ss_notification_service.ss_notification_service import NotificationService
 
 
@@ -21,20 +20,33 @@ class UltimateSelenium:
     def get(self, url: str):
         try:
             self.driver.get(url)
-        except:
-            return False
+        except WebDriverException:
+            self.driver.close()
+            raise UltimateSeleniumError("US-restart")
 
     def find_element(self, paths: list, require=True):
-        for i in range(5):
+        for i in range(3):
             for path in paths:
                 try:
                     return self.driver.find_element_by_xpath(path)
-                # except ProxyError:
-                #     raise UltimateSeleniumError("US-restart")
-                except Exception as e:
+                except NoSuchElementException as e:
                     if i == 2 and require:
                         base64_data = self.driver.get_screenshot_as_base64()
-                        self.notification_service.post_email("Finding element failed!", f"{paths} \n\n require: {require} \n\n {e} \n\n {base64_data}")
+                        self.notification_service.post_email(subject="Finding element failed!",
+                                                             message=f"Paths: {paths} \n\n"
+                                                                     f"require: {require} \n\n"
+                                                                     f"{e}",
+                                                             images={"error_msg.png": base64_data})
+                    time.sleep(randint(2, 3))
+                except Exception as e:
+                    if i == 2:
+                        base64_data = self.driver.get_screenshot_as_base64()
+                        self.notification_service.post_email(subject="Unexpected error!",
+                                                             message=f"Paths: {paths} \n\n"
+                                                                     f"require: {require} \n\n"
+                                                                     f"{e}",
+                                                             images={"error_msg.png": base64_data})
+                        raise UltimateSeleniumError("US-restart")
                     time.sleep(randint(2, 3))
         if require:
             raise UltimateSeleniumError("US-restart")
