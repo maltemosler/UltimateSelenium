@@ -68,6 +68,7 @@ class UltimateSelenium:
                         for cookie in pickle.load(open(file, "rb")):
                             self.driver.add_cookie(cookie)
                         return True
+        return False
 
     def close(self):
         self.driver.close()
