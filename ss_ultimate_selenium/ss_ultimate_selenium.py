@@ -70,5 +70,8 @@ class UltimateSelenium:
                         return True
         return False
 
+    def execute_script(self, script: str):
+        self.driver.execute_script(script)  # "window.history.go(-1)"
+
     def close(self):
         self.driver.close()
