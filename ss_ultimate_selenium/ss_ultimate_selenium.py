@@ -56,16 +56,16 @@ class UltimateSelenium:
             raise UltimateSeleniumError("US-restart")
 
     def save_cookies(self, path: str, file: str):
-        pickle.dump(self.driver.get_cookies(), open(f"{path}/{file}-{datetime.datetime.now().strftime('%m%d%Y%H%M%S')}", "wb"))
+        pickle.dump(self.driver.get_cookies(), open(f"{path}/{file}-{datetime.datetime.now().strftime('%m%d%Y%H%M%S')}.pkl", "wb"))
 
     def load_cookies(self, path: str, days_to_store: int):
         load_store = datetime.datetime.now() - datetime.timedelta(days=days_to_store)
 
         for path, directories, files in os.walk(f"{os.getcwd()}/{path}"):
             for file in files:
-                if "-" in file:
-                    if int(load_store.strftime("%m%d%Y%H%M%S")) > int(file.split("-")[1]):
-                        for cookie in pickle.load(open(file, "rb")):
+                if "-" in file and ".pkl" in file:
+                    if int(load_store.strftime("%m%d%Y%H%M%S")) < int(file.replace(".pkl", "").split("-")[1]):
+                        for cookie in pickle.load(open(f"{path}/{file}", "rb")):
                             self.driver.add_cookie(cookie)
                         return True
         return False
