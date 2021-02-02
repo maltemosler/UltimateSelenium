@@ -17,9 +17,9 @@ class UltimateSelenium:
     driver = None
     notification_service = None
 
-    def __init__(self, cfg, driver):
+    def __init__(self, driver): # todo: driver to ultimate selenium handling^^
         self.driver = driver
-        self.notification_service = NotificationService(cfg)
+        self.notification_service = NotificationService()
 
     def get(self, url: str):
         try:
