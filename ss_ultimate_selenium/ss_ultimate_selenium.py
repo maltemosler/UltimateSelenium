@@ -1,4 +1,8 @@
+import datetime
+import os
+import pickle
 import time
+
 from random import randint
 
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
@@ -13,9 +17,9 @@ class UltimateSelenium:
     driver = None
     notification_service = None
 
-    def __init__(self, cfg, driver):
+    def __init__(self, driver): # todo: driver to ultimate selenium handling^^
         self.driver = driver
-        self.notification_service = NotificationService(cfg)
+        self.notification_service = NotificationService()
 
     def get(self, url: str):
         try:
@@ -50,6 +54,24 @@ class UltimateSelenium:
                     time.sleep(randint(2, 3))
         if require:
             raise UltimateSeleniumError("US-restart")
+
+    def save_cookies(self, path: str, file: str):
+        pickle.dump(self.driver.get_cookies(), open(f"{path}/{file}-{datetime.datetime.now().strftime('%m%d%Y%H%M%S')}.pkl", "wb"))
+
+    def load_cookies(self, path: str, days_to_store: int):
+        load_store = datetime.datetime.now() - datetime.timedelta(days=days_to_store)
+
+        for path, directories, files in os.walk(f"{os.getcwd()}/{path}"):
+            for file in files:
+                if "-" in file and ".pkl" in file:
+                    if int(load_store.strftime("%m%d%Y%H%M%S")) < int(file.replace(".pkl", "").split("-")[1]):
+                        for cookie in pickle.load(open(f"{path}/{file}", "rb")):
+                            self.driver.add_cookie(cookie)
+                        return True
+        return False
+
+    def execute_script(self, script: str):
+        self.driver.execute_script(script)  # "window.history.go(-1)"
 
     def close(self):
         self.driver.close()
