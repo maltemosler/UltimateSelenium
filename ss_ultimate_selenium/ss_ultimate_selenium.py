@@ -21,8 +21,8 @@ def get_driver(chrome_options):
         pass
 
     cfg_paths = [
-        "/home/mmosler/secrets",
-        "/home/scripts/secrets",
+        "/home/mmosler/",
+        "/home/scripts/",
         #f"../{os.path.dirname(os.path.abspath(__file__))}",
         #f"{os.path.dirname(os.path.abspath(__file__))}",
     ]
