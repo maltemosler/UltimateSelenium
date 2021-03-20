@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='UltimateSelenium',
-    version='4.0.2',
+    version='4.0.3',
     url='https://github.com/maltemosler/UltimateSelenium.git',
     author='Malte Mosler',
     author_email='support@skin-society.com',

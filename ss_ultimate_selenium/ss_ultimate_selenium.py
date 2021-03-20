@@ -6,7 +6,7 @@ import time
 from random import randint
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from selenium.common.exceptions import NoSuchElementException
 from ss_notification_service.ss_notification_service import NotificationService
 
 
@@ -17,7 +17,7 @@ class UltimateSeleniumError(Exception):
 def get_driver(chrome_options):
     try:
         return webdriver.Chrome(options=chrome_options)
-    except WebDriverException:
+    except:
         pass
 
     cfg_paths = [
@@ -39,10 +39,10 @@ def get_driver(chrome_options):
         print(path)
         try:
             return webdriver.Chrome(f"{path}chromedriver", options=chrome_options)
-        except WebDriverException:
+        except:
             try:
                 return webdriver.Chrome(f"{path}chromedriver.exe", options=chrome_options)
-            except WebDriverException:
+            except:
                 continue
 
     raise(UltimateSeleniumError("NO DRIVER FOUND"))
@@ -62,7 +62,7 @@ class UltimateSelenium:
     def get(self, url: str):
         try:
             self.driver.get(url)
-        except WebDriverException:
+        except:
             self.driver.close()
             raise UltimateSeleniumError("US-restart")
 
