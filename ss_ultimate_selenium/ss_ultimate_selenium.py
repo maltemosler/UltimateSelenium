@@ -23,8 +23,8 @@ def get_driver(chrome_options):
     cfg_paths = [
         "/home/mmosler/",
         "/home/scripts/",
-        #f"../{os.path.dirname(os.path.abspath(__file__))}",
-        #f"{os.path.dirname(os.path.abspath(__file__))}",
+        f"../{os.path.dirname(os.path.abspath(__file__))}",
+        f"{os.path.dirname(os.path.abspath(__file__))}",
     ]
 
     # go through every parent directory and search for path
@@ -39,7 +39,8 @@ def get_driver(chrome_options):
         print(path)
         try:
             return webdriver.Chrome(f"{path}chromedriver", options=chrome_options)
-        except:
+        except Exception as e:
+            print(e)
             try:
                 return webdriver.Chrome(f"{path}chromedriver.exe", options=chrome_options)
             except:
