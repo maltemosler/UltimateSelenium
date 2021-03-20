@@ -36,11 +36,12 @@ def get_driver(chrome_options):
         cfg_paths.append(tmp)
 
     for path in cfg_paths:
+        print(path)
         try:
-            return webdriver.Chrome(f"{path}/chromedriver", options=chrome_options)
+            return webdriver.Chrome(f"{path}chromedriver", options=chrome_options)
         except WebDriverException:
             try:
-                return webdriver.Chrome(f"{path}/chromedriver.exe", options=chrome_options)
+                return webdriver.Chrome(f"{path}chromedriver.exe", options=chrome_options)
             except WebDriverException:
                 continue
 
