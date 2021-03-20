@@ -5,6 +5,7 @@ import time
 
 from random import randint
 
+from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from ss_notification_service.ss_notification_service import NotificationService
 
@@ -13,12 +14,48 @@ class UltimateSeleniumError(Exception):
     pass
 
 
+def get_driver(chrome_options):
+    try:
+        return webdriver.Chrome(options=chrome_options)
+    except WebDriverException:
+        pass
+
+    cfg_paths = [
+        "/home/mmosler/secrets",
+        "/home/scripts/secrets",
+        #f"../{os.path.dirname(os.path.abspath(__file__))}",
+        #f"{os.path.dirname(os.path.abspath(__file__))}",
+    ]
+
+    # go through every parent directory and search for path
+    whole_path = os.path.abspath(os.getcwd()).replace("\\", "/")
+    splitted_path = whole_path.split("/")
+    tmp = ""
+    for path in splitted_path:
+        tmp += f"{path}/"
+        cfg_paths.append(tmp)
+
+    for path in cfg_paths:
+        try:
+            return webdriver.Chrome(f"{path}/chromedriver", options=chrome_options)
+        except WebDriverException:
+            try:
+                return webdriver.Chrome(f"{path}/chromedriver.exe", options=chrome_options)
+            except WebDriverException:
+                continue
+
+    raise(UltimateSeleniumError("NO DRIVER FOUND"))
+
+
 class UltimateSelenium:
     driver = None
     notification_service = None
 
-    def __init__(self, driver): # todo: driver to ultimate selenium handling^^
-        self.driver = driver
+    def __init__(self, chrome_options=None):
+        if not chrome_options:
+            chrome_options = webdriver.ChromeOptions()
+        self.driver = get_driver(chrome_options)
+
         self.notification_service = NotificationService()
 
     def get(self, url: str):
